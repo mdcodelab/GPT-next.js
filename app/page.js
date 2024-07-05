@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 
 function HomePage() {
   return (
-    <div className="hero min-h-screen bg-base-200">
+    <div className="hero min-h-screen bg-cover bg-base-300">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-6xl text-primary font-bold">GPTGenius</h1>
