@@ -1,11 +1,12 @@
-import React from 'react'
+import Chat from "../../../components/Chat";
 
 function ChatPage() {
   return (
     <div>
-      ChatPage
+      <Chat></Chat>
     </div>
   )
 }
 
 export default ChatPage;
+

@@ -1,8 +1,10 @@
-import { UserProfile } from "@clerk/nextjs";
+import { UserProfile } from '@clerk/nextjs';
 
-function ProfilePage() {
-  return (<UserProfile/>)
+
+const ProfilePage = () => {
+     return  <UserProfile />
+
   
-}
+};
+export default ProfilePage;
 
-export default ProfilePage
