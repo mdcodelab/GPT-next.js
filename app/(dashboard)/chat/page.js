@@ -1,10 +1,16 @@
 import Chat from "../../../components/Chat";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 function ChatPage() {
+  const queryClient = new QueryClient();
   return (
-    <div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Chat></Chat>
-    </div>
+    </HydrationBoundary>
   )
 }
 
