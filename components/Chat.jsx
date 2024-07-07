@@ -5,17 +5,28 @@ import { useMutation } from "@tanstack/react-query";
 
 function Chat() {
 const[text, setText]=useState("");
-const[message, setMessage]=useState([]);
+const[messages, setMessages]=useState([]);
 
-const {mutate}=useMutation({
-mutationFn: (text) => generateChatResponse(text)
-})
+const { mutate } = useMutation({
+  mutationFn: (newMessage) => generateChatResponse([...messages, newMessage]),
+  onSuccess: (responseMessage) => {
+    if(!responseMessage) {
+      toast.error("Something goes wrong...")
+    }
+    setMessages((prevMessages) => [...prevMessages, responseMessage]);
+    console.log("debug:", messages);
+  },
+});
 
 function handleSubmit(e) {
-e.preventDefault();
-console.log(text);
-mutate(text);
+  e.preventDefault();
+  console.log(text);
+  const newMessage = {role: "user", content: text};
+  mutate(newMessage);;
+  setMessages((prevState) => ([...prevState, newMessage]));
+  setText("");
 }
+
 
   return (
     <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[ifr, auto]">
