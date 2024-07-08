@@ -2,15 +2,30 @@
 
 import toast from "react-hot-toast";
 import TourInfo from "./TourInfo";
+import { useMutation, useQueryClient} from "@tanstack/react-query";
+import { getExistingTour, generateTourResponse, createNewTour } from "../utils/actions";
 
 const NewTour = () => {
+const {mutate, isPending, data:tour}=useMutation({
+mutationFn: async (destination)=> {
+    const newTour = await generateTourResponse(destination);
+    if(newTour) {return newTour}
+    toast.error("There is an error");
+} 
+});
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const destination = Object.fromEntries(formData.entries());
-    console.log(destination);
+    console.log(destination); //{city: "...", country: "..."}
+    mutate(destination);
   };
+
+  if(isPending) {
+    return <span className="loading loading-lg"></span>
+  }
 
   return (
     <>
@@ -37,7 +52,7 @@ const NewTour = () => {
         </div>
       </form>
       <div className="mt-16">
-        <TourInfo />
+        {tour ? <TourInfo tour={tour}></TourInfo> : null}
       </div>
     </>
   );
