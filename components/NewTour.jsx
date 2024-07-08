@@ -6,13 +6,16 @@ import { useMutation, useQueryClient} from "@tanstack/react-query";
 import { getExistingTour, generateTourResponse, createNewTour } from "../utils/actions";
 
 const NewTour = () => {
-const {mutate, isPending, data:tour}=useMutation({
-mutationFn: async (destination)=> {
-    const newTour = await generateTourResponse(destination);
-    if(newTour) {return newTour}
-    toast.error("There is an error");
-} 
-});
+const {mutate, isPending, data: tour} = useMutation({
+    mutationFn: async (destination) => {
+      const newTour = await generateTourResponse(destination);
+      if (newTour) {
+        return newTour;
+      }
+      toast.error('No matching city found...');
+      return null;
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
