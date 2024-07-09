@@ -16,7 +16,7 @@ const {mutate, isPending, data: tour} = useMutation({
       const newTour = await generateTourResponse(destination);
       if (newTour) {
        await createNewTour(newTour); //save it to the database
-        queryClient.invalidateQueries({ queryKey: ["tours"] });
+        queryClient.invalidateQueries({ queryKey: ["tours"] }); //refetch & display the newest value
         return newTour;
       }
       toast.error('No matching city found...');

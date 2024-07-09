@@ -81,3 +81,23 @@ export const createNewTour = async (tour) => {  //creates new tour in the databa
     data: tour
   })
 };
+
+export const getAllTours = async (searchTerm) => {
+if(!searchTerm) {
+const tours = await db.tour.findMany({
+  orderBy: {city: "asc"}
+})
+return tours; //when there's no search terms - use servers side page
+}
+
+const tours = await db.tour.findMany({
+  where: {
+    OR: [
+      { city: { contains: searchTerm } }, //on the use client pages
+      { country: { contains: searchTerm } },
+    ],
+    orderBy: { city: "asc" },
+  },
+});
+return tours;
+}
