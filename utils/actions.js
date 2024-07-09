@@ -1,5 +1,6 @@
 "use server";
 
+import { db } from "./db";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -27,7 +28,13 @@ export const generateChatResponse = async (chatMessages) => {
 };
 
 export const getExistingTour = async ({ city, country }) => {
-  return null;
+return await db.tour.findUnique({
+  where: {
+    city_country: {
+      city: city, country: country
+    }
+  }
+})
 };
 
 export const generateTourResponse = async ({ city, country }) => {
@@ -69,6 +76,8 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
 };
 
 
-export const createNewTour = async (tour) => {
-  return null;
+export const createNewTour = async (tour) => {  //creates new tour in the database
+  return db.tour.create({
+    data: tour
+  })
 };
