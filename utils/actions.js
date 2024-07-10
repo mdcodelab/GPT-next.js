@@ -96,8 +96,8 @@ const tours = await db.tour.findMany({
       { city: { contains: searchTerm } }, //on the use client pages
       { country: { contains: searchTerm } },
     ],
-    orderBy: { city: "asc" },
   },
+  orderBy: { city: "asc" },
 });
 return tours;
 }
