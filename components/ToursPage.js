@@ -14,16 +14,26 @@ function ToursPage() {
 
   return (
     <>
-    <form className="max-w-lg mb-12 mx-auto">
+      <form className="max-w-lg mb-12 mx-auto">
         <div className="join w-full">
-            <input type="text" placeholder="Enter city or country here..." 
-            className="input input-bordered join-item w-full" value={searchValue}
-            onChange = {(e)=> setSearchValue(e.target.value)} required></input>
-            <button type="button" className="join-item btn btn-primary" disabled={isPending}>
-                {isPending ? "...Please wait" : "Reset"} onClick={()=>setSearchValue("")}
-            </button>
+          <input
+            type="text"
+            placeholder="Enter city or country here..."
+            className="input input-bordered join-item w-full"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            required
+          ></input>
+          <button
+            type="button"
+            className="join-item btn btn-primary"
+            disabled={isPending}
+            onClick={() => setSearchValue("")}
+          >
+            {isPending ? "...Please wait" : "Reset"}
+          </button>
         </div>
-    </form>
+      </form>
 
       {isPending ? (
         <span className="loading"></span>

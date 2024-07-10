@@ -101,3 +101,11 @@ const tours = await db.tour.findMany({
 });
 return tours;
 }
+
+export const getSingleTour = async (id) => {
+return await db.tour.findUnique({
+  where: {
+    id: id
+  }
+})
+}
