@@ -39,7 +39,7 @@ const {mutate, isPending, data: tour} = useMutation({
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="max-w-2xl">
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
         <h2 className=" mb-4 font-semibold">Select your dream destination!</h2>
         <div className="join w-full">
           <input

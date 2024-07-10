@@ -109,3 +109,17 @@ return await db.tour.findUnique({
   }
 })
 }
+
+export const generateTourImage = async ({city, country}) => {
+try {
+  const tourImage = await openai.images.generate({
+    prompt: `A panoramic view of tech ${city}, ${country}`,
+    n: 1,
+    size: "512x512"
+  })
+  return tourImage?.data[0]?.url
+} catch (error) {
+  console.log(error);
+  return null;
+}
+}
