@@ -8,8 +8,9 @@ const links = [
 ];
 
 function NavLinks() {
+
   return (
-    <ul className="menu text-base-content mt-4">
+    <ul className="menu text-base-content mt-4" id="my-drawer-2">
         {links.map((link) => (
           <li key={link.href}><Link href={link.href} className="text-lg">{link.label}</Link></li>
         ))}

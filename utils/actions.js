@@ -123,3 +123,47 @@ try {
   return null;
 }
 }
+
+//////tokens
+//.get tokens base on the id
+export const getUserTokensById = async (clerkId)=> {
+  const result = await db.token.findUnique({
+    where: {
+      clerkId: clerkId
+    }
+  })
+  return result?.tokens
+}
+
+export const generateUserTokensForId = async (clerkId) => {
+const result = await db.token.create({
+  data: {
+    clerkId
+  }
+})
+return result?.tokens
+}
+
+export const getOrGenerateTokens = async (clerkId) => {
+  const token = await getUserTokensById(clerkId);
+  if(!token) {
+    return await generateUserTokensForId(clerkId);
+  }
+  return token;
+}
+
+export const subtractTokens = async (clerkId, tokens) => {
+  const result = await prisma.token.update({
+    where: {
+      clerkId,
+    },
+    data: {
+      tokens: {
+        decrement: tokens,
+      },
+    },
+  });
+  revalidatePath("/profile");
+  // Return the new token value
+  return result.tokens;
+};
