@@ -8,8 +8,8 @@ function ToursPage() {
     const[searchValue, setSearchValue]=useState("");
 
   const { data, isPending } = useQuery({
-    queryKey: ["tours", searchValue],
-    queryFn: () => getAllTours(searchValue),
+    queryKey: ["tours", searchValue.toLowerCase()],
+    queryFn: () => getAllTours(searchValue.toLowerCase()),
   });
 
   return (

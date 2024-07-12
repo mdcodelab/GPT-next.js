@@ -28,13 +28,14 @@ export const generateChatResponse = async (chatMessages) => {
 };
 
 export const getExistingTour = async ({ city, country }) => {
-return await db.tour.findUnique({
-  where: {
-    city_country: {
-      city: city, country: country
-    }
-  }
-})
+  return await db.tour.findUnique({
+    where: {
+      city_country: {
+        city: city,
+        country: country,
+      },
+    },
+  });
 };
 
 export const generateTourResponse = async ({ city, country }) => {
@@ -47,7 +48,7 @@ Once you have a list, create a one-day tour. Response should be in the following
     "country": "${country}",
     "title": "title of the tour",
     "description": "description of the city and tour",
-    "stops": ["short paragraph on the stop 1 ", "short paragraph on the stop 2","short paragraph on the stop 3"]
+    "stops": ["stop name", "stop name","stop name"]
   }
 }
 If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null }, with no additional characters.`;
@@ -75,82 +76,89 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
   }
 };
 
-
-export const createNewTour = async (tour) => {  //creates new tour in the database
+export const createNewTour = async (tour) => {
+  //creates new tour in the database
   return db.tour.create({
-    data: tour
-  })
+    data: tour,
+  });
 };
 
 export const getAllTours = async (searchTerm) => {
-if(!searchTerm) {
-const tours = await db.tour.findMany({
-  orderBy: {city: "asc"}
-})
-return tours; //when there's no search terms - use servers side page
-}
+  if (!searchTerm) {
+    const tours = await prisma.tour.findMany({
+      orderBy: {
+        city: "asc",
+      },
+    });
+    return tours;
+  } else {
+    const normalizedSearchTerm = searchTerm.toLowerCase();
+    const tours = await prisma.tour.findMany({
+      where: {
+        OR: [
+          { city: { contains: normalizedSearchTerm, mode: "insensitive" } },
+          { country: { contains: normalizedSearchTerm, mode: "insensitive" } },
+        ],
+      },
+      orderBy: {
+        city: "asc",
+      },
+    });
+    return tours;
+  }
+};
 
-const tours = await db.tour.findMany({
-  where: {
-    OR: [
-      { city: { contains: searchTerm } }, //on the use client pages
-      { country: { contains: searchTerm } },
-    ],
-  },
-  orderBy: { city: "asc" },
-});
-return tours;
-}
+
 
 export const getSingleTour = async (id) => {
-return await db.tour.findUnique({
-  where: {
-    id: id
-  }
-})
-}
+  return await db.tour.findUnique({
+    where: {
+      id: id,
+    },
+  });
+};
 
-export const generateTourImage = async ({city, country}) => {
-try {
-  const tourImage = await openai.images.generate({
-    prompt: `A panoramic view of tech ${city}, ${country}`,
-    n: 1,
-    size: "512x512"
-  })
-  return tourImage?.data[0]?.url
-} catch (error) {
-  console.log(error);
-  return null;
-}
-}
+export const generateTourImage = async ({ city, country }) => {
+  try {
+    const tourImage = await openai.images.generate({
+      prompt: `A panoramic view of tech ${city}, ${country}`,
+      n: 1,
+      size: "512x512",
+    });
+    return tourImage?.data[0]?.url;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
 
 //////tokens
 //.get tokens base on the id
-export const getUserTokensById = async (clerkId)=> {
+export const getUserTokensById = async (clerkId) => {
   const result = await db.token.findUnique({
     where: {
-      clerkId: clerkId
-    }
-  })
-  return result?.tokens
-}
+      clerkId: clerkId,
+    },
+  });
+  return result?.tokens;
+};
 
 export const generateUserTokensForId = async (clerkId) => {
-const result = await db.token.create({
-  data: {
-    clerkId
-  }
-})
-return result?.tokens
-}
+  const result = await db.token.create({
+    data: {
+      clerkId,
+    },
+  });
+  return result?.tokens;
+};
 
 export const getOrGenerateTokens = async (clerkId) => {
   const token = await getUserTokensById(clerkId);
-  if(!token) {
+  if (!token) {
     return await generateUserTokensForId(clerkId);
   }
   return token;
-}
+};
 
 export const subtractTokens = async (clerkId, tokens) => {
   const result = await prisma.token.update({
